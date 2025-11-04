@@ -1,67 +1,65 @@
-// Load saved game or start new
-let gameData = JSON.parse(localStorage.getItem("uplinkProtocol")) || {
-  clicks: 0,
-  upgrades: { cursor: 1 }
-};
+// ===== Initialize Data =====
+let dp = parseInt(localStorage.getItem('dp')) || 0;
+let clickPower = parseInt(localStorage.getItem('clickPower')) || 1;
+let uiUpgrades = JSON.parse(localStorage.getItem('uiUpgrades')) || [];
 
-const clickCountEl = document.getElementById("clickCount");
-const clickerBtn = document.getElementById("clickerBtn");
-const shopEl = document.getElementById("shop");
+const dpCount = document.getElementById('dp-count');
+const clickBtn = document.getElementById('click-btn');
 
-// Define upgrades
-const upgrades = [
-  { name: "Cursor Upgrade", key: "cursor", cost: 10, multiplier: 1 },
-  { name: "Packet Amplifier", key: "amplifier", cost: 50, multiplier: 5 }
-];
-
-// Render shop
-function renderShop() {
-  shopEl.innerHTML = "";
-  upgrades.forEach(upg => {
-    const div = document.createElement("div");
-    div.className = "shop-item";
-    div.innerHTML = `
-      <span>${upg.name} (Cost: ${upg.cost})</span>
-      <button ${gameData.clicks < upg.cost ? "disabled" : ""}>Buy</button>
-    `;
-    div.querySelector("button").addEventListener("click", () => buyUpgrade(upg));
-    shopEl.appendChild(div);
-  });
+function updateDP() {
+  dpCount.textContent = dp;
+  localStorage.setItem('dp', dp);
 }
 
-// Handle upgrade purchase
-function buyUpgrade(upg) {
-  if (gameData.clicks >= upg.cost) {
-    gameData.clicks -= upg.cost;
-    gameData.upgrades[upg.key] = (gameData.upgrades[upg.key] || 0) + 1;
-    upg.cost = Math.floor(upg.cost * 1.5);
-    updateDisplay();
-    renderShop();
-    saveGame();
-  }
-}
-
-// Update clicks display
-function updateDisplay() {
-  clickCountEl.textContent = gameData.clicks;
-}
-
-// Clicker button logic
-clickerBtn.addEventListener("click", () => {
-  let multiplier = 0;
-  for (const upg in gameData.upgrades) {
-    multiplier += gameData.upgrades[upg];
-  }
-  gameData.clicks += multiplier;
-  updateDisplay();
-  saveGame();
+// ===== Click Handler =====
+clickBtn.addEventListener('click', () => {
+  dp += clickPower;
+  updateDP();
 });
 
-// Save game
-function saveGame() {
-  localStorage.setItem("uplinkProtocol", JSON.stringify(gameData));
+// ===== Shop Purchases =====
+document.querySelectorAll('.shop-item button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const cost = parseInt(btn.dataset.cost);
+    const type = btn.dataset.type;
+    const value = btn.dataset.value;
+
+    if(dp < cost) return alert("Not enough Data Points!");
+
+    dp -= cost;
+    updateDP();
+
+    if(type === 'click') {
+      clickPower += parseInt(value);
+      localStorage.setItem('clickPower', clickPower);
+    } else if(type === 'ui') {
+      uiUpgrades.push(value);
+      localStorage.setItem('uiUpgrades', JSON.stringify(uiUpgrades));
+      applyUIUpgrades();
+    }
+  });
+});
+
+// ===== UI Upgrades =====
+function applyUIUpgrades() {
+  const body = document.body;
+  if(uiUpgrades.includes('gradient')) {
+    body.style.background = 'linear-gradient(-45deg, #100018, #1e0030, #2a0050, #4f46e5)';
+    body.style.backgroundSize = '400% 400%';
+    body.style.animation = 'gradientFlow 20s ease infinite';
+  }
 }
 
-// Initial render
-updateDisplay();
-renderShop();
+// ===== Animations =====
+const style = document.createElement('style');
+style.innerHTML = `
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}`;
+document.head.appendChild(style);
+
+// ===== Initialize =====
+updateDP();
+applyUIUpgrades();
