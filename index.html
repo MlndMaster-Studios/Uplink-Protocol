@@ -3,39 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>???</title>
+  <title>Uplink Protocol</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="wrapper">
-    <header>
-      <h1><span>???</span></h1>
-      <p class="tagline">something hums quietly behind the glass...</p>
-    </header>
+  <div class="boot-screen" id="bootScreen">
+    <div class="boot-text" id="bootText">
+      <p>INITIALIZING SYSTEM...</p>
+    </div>
+  </div>
 
-    <main id="core">
-      <section class="display">
-        <div class="screen">
-          <div id="output">initializing...</div>
-        </div>
-        <button id="main-btn" class="tiny">Activate</button>
-      </section>
-
-      <section class="widgets">
-        <div class="widget-card">
-          <h3>Log</h3>
-          <p id="log">[standby]</p>
-        </div>
-        <div class="widget-card">
-          <h3>Status</h3>
-          <p id="status">Dormant</p>
-        </div>
-      </section>
-    </main>
-
-    <footer>
-      <p class="tiny">version 0.0.1 — compiled in the dark</p>
-    </footer>
+  <div class="main" id="mainContent">
+    <h1>Uplink Protocol</h1>
+    <p id="storyLog">[System offline.]</p>
+    <button id="startButton">Start System</button>
   </div>
 
   <script src="script.js"></script>
