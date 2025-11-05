@@ -1,106 +1,167 @@
-// ===== DOM ELEMENTS =====
-const priorityFilter = document.getElementById("priorityFilter");
-const copyLinksBtn = document.getElementById("copyLinksBtn");
-const clearPurchasedBtn = document.getElementById("clearPurchasedBtn");
-const productCards = document.querySelectorAll(".product-card");
+// script.js
+// Lightweight behaviour for Liam's wishlist site.
+// - click an item to open its link in a new tab
+// - mark items purchased (persisted in localStorage)
+// - filtering by stars, search, and toggling VIP list
+// - copy visible links to clipboard
 
-// ===== LOCAL STORAGE HELPERS =====
-function getPurchased() {
-  return JSON.parse(localStorage.getItem("purchasedItems") || "[]");
-}
-function savePurchased(arr) {
-  localStorage.setItem("purchasedItems", JSON.stringify(arr));
-}
+(() => {
+  const wishlist = document.getElementById('wishlist');
+  const items = Array.from(document.querySelectorAll('.wish'));
+  const searchInput = document.getElementById('search');
+  const filterStars = document.getElementById('filterStars');
+  const toggleVIP = document.getElementById('toggleVIP');
+  const vipGroup = document.getElementById('vipGroup');
+  const copyLinksBtn = document.getElementById('copyLinks');
+  const clearPurchasedBtn = document.getElementById('clearPurchased');
 
-// ===== INITIALIZATION =====
-let purchasedItems = getPurchased();
+  const STORAGE_KEY = 'liam_wishlist_purchased_v1';
 
-// Apply saved purchase states
-purchasedItems.forEach(id => {
-  const card = document.querySelector(`[data-id="${id}"]`);
-  if (card) markCardAsPurchased(card);
-});
-
-// ===== PRIORITY FILTER =====
-priorityFilter.addEventListener("change", () => {
-  const selected = priorityFilter.value;
-  productCards.forEach(card => {
-    const stars = parseInt(card.getAttribute("data-priority"));
-    card.style.display =
-      selected === "all" || stars === parseInt(selected) ? "block" : "none";
-  });
-});
-
-// ===== PURCHASE BUTTON =====
-productCards.forEach(card => {
-  const btn = card.querySelector(".purchase-btn");
-  const id = card.getAttribute("data-id");
-
-  btn.addEventListener("click", e => {
-    e.stopPropagation();
-    if (purchasedItems.includes(id)) {
-      purchasedItems = purchasedItems.filter(x => x !== id);
-      unmarkCardAsPurchased(card);
-    } else {
-      purchasedItems.push(id);
-      markCardAsPurchased(card);
+  // Load purchased set from localStorage
+  function loadPurchased() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch {
+      return {};
     }
-    savePurchased(purchasedItems);
-  });
-});
-
-function markCardAsPurchased(card) {
-  const btn = card.querySelector(".purchase-btn");
-  btn.textContent = "✓ Purchased";
-  btn.classList.add("purchased");
-  card.classList.add("card-purchased");
-}
-function unmarkCardAsPurchased(card) {
-  const btn = card.querySelector(".purchase-btn");
-  btn.textContent = "Mark as Purchased";
-  btn.classList.remove("purchased");
-  card.classList.remove("card-purchased");
-}
-
-// ===== COPY VISIBLE LINKS =====
-copyLinksBtn.addEventListener("click", () => {
-  const visibleCards = Array.from(productCards).filter(
-    c => c.style.display !== "none"
-  );
-  const links = visibleCards
-    .map(c => c.getAttribute("data-link"))
-    .filter(Boolean)
-    .join("\n");
-
-  if (links.length) {
-    navigator.clipboard.writeText(links);
-    copyLinksBtn.textContent = "Copied!";
-    setTimeout(() => (copyLinksBtn.textContent = "Copy Visible Links"), 1500);
-  } else {
-    alert("No visible products with links to copy!");
   }
-});
 
-// ===== CLEAR PURCHASED MARKS =====
-clearPurchasedBtn.addEventListener("click", () => {
-  purchasedItems = [];
-  savePurchased(purchasedItems);
-  productCards.forEach(unmarkCardAsPurchased);
-});
+  function savePurchased(map) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(map));
+  }
 
-// ===== OPEN LINKS (with PlayStation override) =====
-productCards.forEach(card => {
-  card.addEventListener("click", () => {
-    const link = card.getAttribute("data-link");
-    const isPlayStation = card.classList.contains("playstation");
+  let purchasedMap = loadPurchased();
 
-    if (isPlayStation) {
-      window.open(
-        "https://www.amazon.com/Funko-Pop-Games-Portal-Chell/dp/B00TR79BO8",
-        "_blank"
-      );
-    } else if (link) {
-      window.open(link, "_blank");
+  // Apply purchased marks visually
+  function refreshPurchasedMarks() {
+    items.forEach(el => {
+      const id = getItemId(el);
+      if (purchasedMap[id]) {
+        el.classList.add('purchased');
+        el.setAttribute('data-purchased', 'true');
+      } else {
+        el.classList.remove('purchased');
+        el.removeAttribute('data-purchased');
+      }
+    });
+  }
+
+  function getItemId(el) {
+    // prefer a stable ID: category + title
+    const title = el.querySelector('h3')?.innerText.trim() || 'item';
+    const cat = el.dataset.category || 'misc';
+    return `${cat}::${title}`;
+  }
+
+  // Item click behavior
+  items.forEach(el => {
+    el.addEventListener('click', (ev) => {
+      // If user clicked a control inside (future-proof), ignore
+      if (ev.target.closest('button')) return;
+
+      const link = el.dataset.link;
+      if (link && link !== '#') {
+        window.open(link, '_blank', 'noopener');
+      } else {
+        // toggle purchased state if no link (or if user clicked while holding ctrl)
+        const id = getItemId(el);
+        purchasedMap[id] = !purchasedMap[id];
+        savePurchased(purchasedMap);
+        refreshPurchasedMarks();
+      }
+    });
+
+    // double-click toggles purchased (convenience)
+    el.addEventListener('dblclick', (ev) => {
+      const id = getItemId(el);
+      purchasedMap[id] = !purchasedMap[id];
+      savePurchased(purchasedMap);
+      refreshPurchasedMarks();
+    });
+  });
+
+  // Filtering logic (stars + search)
+  function applyFilters() {
+    const starFilter = filterStars.value; // "all" or number
+    const query = (searchInput.value || '').toLowerCase().trim();
+
+    items.forEach(el => {
+      const stars = parseInt(el.dataset.stars || '1', 10);
+      const title = el.querySelector('h3')?.innerText.toLowerCase() || '';
+      const meta = el.querySelector('.meta')?.innerText.toLowerCase() || '';
+
+      const matchesStars = starFilter === 'all' ? true : (stars >= parseInt(starFilter, 10));
+      const matchesQuery = !query || title.includes(query) || meta.includes(query);
+
+      el.style.display = (matchesStars && matchesQuery) ? '' : 'none';
+    });
+  }
+
+  // Copy visible links
+  async function copyVisibleLinks() {
+    const visible = items.filter(i => i.style.display !== 'none');
+    if (!visible.length) {
+      alert('No visible items to copy.');
+      return;
+    }
+    const lines = visible.map(el => {
+      const title = el.querySelector('h3')?.innerText.trim() || 'Item';
+      const link = (el.dataset.link && el.dataset.link !== '#') ? el.dataset.link : '[no link]';
+      return `${title} — ${link}`;
+    }).join('\n');
+
+    try {
+      await navigator.clipboard.writeText(lines);
+      copyLinksBtn.textContent = 'Copied!';
+      setTimeout(() => copyLinksBtn.textContent = 'Copy visible links', 1300);
+    } catch {
+      prompt('Copy these links manually:', lines);
+    }
+  }
+
+  // Toggle VIP
+  function toggleVipGroup() {
+    const hidden = vipGroup.hasAttribute('hidden');
+    if (hidden) {
+      vipGroup.removeAttribute('hidden');
+      toggleVIP.textContent = 'Hide VIP list';
+    } else {
+      vipGroup.setAttribute('hidden', '');
+      toggleVIP.textContent = 'Show VIP list';
+    }
+  }
+
+  // Clear purchased marks
+  function clearPurchased() {
+    purchasedMap = {};
+    savePurchased(purchasedMap);
+    refreshPurchasedMarks();
+  }
+
+  // Wire up UI
+  searchInput.addEventListener('input', applyFilters);
+  filterStars.addEventListener('change', applyFilters);
+  toggleVIP.addEventListener('click', toggleVipGroup);
+  copyLinksBtn.addEventListener('click', copyVisibleLinks);
+  clearPurchasedBtn.addEventListener('click', () => {
+    if (confirm('Clear all purchased marks?')) clearPurchased();
+  });
+
+  // small accessibility: keyboard toggles
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'v' && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      toggleVipGroup();
+    }
+    if (e.key === 'f' && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      searchInput.focus();
     }
   });
-});
+
+  // initial run
+  refreshPurchasedMarks();
+  applyFilters();
+
+})();
