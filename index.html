@@ -1,47 +1,286 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Uplink Protocol</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Liam's 2024 Wishlist</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="container">
-    <h1>Uplink Protocol</h1>
-    <div class="clicker-section">
-      <div id="clicker-card" class="card">
-        <h2>Data Points: <span id="dp-count">0</span></h2>
-        <button id="click-btn">Hack!</button>
+  <header class="site-header">
+    <div class="header-inner">
+      <h1><span>Liam’s</span> 2024 Wishlista</h1>
+      <div class="header-actions">
+        <input id="search" placeholder="Search wishlist..." />
+        <select id="filterStars" title="Filter by priority">
+          <option value="all">All priorities</option>
+          <option value="1">★ 1+</option>
+          <option value="2">★ 2+</option>
+          <option value="3">★ 3+</option>
+          <option value="4">★ 4+</option>
+        </select>
+        <button id="toggleVIP">Toggle VIP list</button>
       </div>
     </div>
+    <p class="subtitle">Click any item to open the product page. Mark items as purchased or save them for later.</p>
+  </header>
 
-    <div class="shop-section">
-      <div class="shop-card card">
-        <h3>Click Upgrades</h3>
-        <div class="shop-item">
-          <span>Data Booster (+1 DP per click)</span>
-          <button data-cost="10" data-type="click" data-value="1">Buy</button>
+  <main class="container">
+    <section class="list-controls">
+      <div class="legend">
+        <strong>Ranking</strong>
+        <div class="stars-legend">
+          <span class="star">★</span><small>One Star — nice to have</small>
+          <span class="star">★★</span><small>Two Stars — want it</small>
+          <span class="star">★★★</span><small>Three Stars — absolutely want</small>
+          <span class="star">★★★★</span><small>Four Stars — VIP</small>
         </div>
-        <div class="shop-item">
-          <span>Overclock (+5 DP per click)</span>
-          <button data-cost="50" data-type="click" data-value="5">Buy</button>
+      </div>
+      <div class="bulk">
+        <button id="copyLinks">Copy visible links</button>
+        <button id="clearPurchased">Clear purchased marks</button>
+      </div>
+    </section>
+
+    <section id="wishlist" class="wishlist-grid">
+      <!-- Games & Giftcards -->
+      <div class="group">
+        <h2>🎮 PlayStation Games & Gift Cards</h2>
+        <div class="items">
+          <article class="wish" data-link="https://a.co/d/0SCjKYf" data-stars="1" data-category="games">
+            <div class="wish-main">
+              <h3>It Takes Two</h3>
+              <p class="meta">$39.99 • Game</p>
+            </div>
+            <div class="wish-actions">
+              <div class="stars">★</div>
+            </div>
+          </article>
+
+          <article class="wish" data-link="https://a.co/d/aCDyYKi" data-stars="1" data-category="games">
+            <div class="wish-main">
+              <h3>Stray</h3>
+              <p class="meta">$19.99 • Game</p>
+            </div>
+            <div class="wish-actions"><div class="stars">★</div></div>
+          </article>
+
+          <article class="wish" data-link="https://a.co/d/0SCjKYf" data-stars="2" data-category="games">
+            <div class="wish-main">
+              <h3>Death Stranding</h3>
+              <p class="meta">$49.99 • Game</p>
+            </div>
+            <div class="wish-actions"><div class="stars">★★</div></div>
+          </article>
+
+          <article class="wish" data-link="https://a.co/d/0SCjKYf" data-stars="2" data-category="games">
+            <div class="wish-main">
+              <h3>Resident Evil 4</h3>
+              <p class="meta">$39.99 • Game</p>
+            </div>
+            <div class="wish-actions"><div class="stars">★★</div></div>
+          </article>
+
+          <article class="wish" data-link="https://a.co/d/0SCjKYf" data-stars="2" data-category="games">
+            <div class="wish-main">
+              <h3>Resident Evil 3</h3>
+              <p class="meta">$39.99 • Game</p>
+            </div>
+            <div class="wish-actions"><div class="stars">★★</div></div>
+          </article>
+
+          <article class="wish" data-link="https://a.co/d/0SCjKYf" data-stars="3" data-category="games">
+            <div class="wish-main">
+              <h3>God of War Ragnarök</h3>
+              <p class="meta">$59.99 • Game</p>
+            </div>
+            <div class="wish-actions"><div class="stars">★★★</div></div>
+          </article>
+
+          <article class="wish" data-link="https://a.co/d/0SCjKYf" data-stars="3" data-category="games">
+            <div class="wish-main">
+              <h3>STAR WARS Jedi: Survivor</h3>
+              <p class="meta">$49.99 • Game</p>
+            </div>
+            <div class="wish-actions"><div class="stars">★★★</div></div>
+          </article>
+
+          <article class="wish" data-link="https://a.co/d/0SCjKYf" data-stars="3" data-category="games">
+            <div class="wish-main">
+              <h3>The Dark Pictures Anthology</h3>
+              <p class="meta">$99.99 • Bundle</p>
+            </div>
+            <div class="wish-actions"><div class="stars">★★★</div></div>
+          </article>
         </div>
       </div>
 
-      <div class="shop-card card">
-        <h3>UI Upgrades</h3>
-        <div class="shop-item">
-          <span>Neon Gradient Background</span>
-          <button data-cost="100" data-type="ui" data-value="gradient">Buy</button>
-        </div>
-        <div class="shop-item">
-          <span>Glowing Buttons</span>
-          <button data-cost="150" data-type="ui" data-value="glow">Buy</button>
+      <!-- LEGO -->
+      <div class="group">
+        <h2>🧱 LEGO Sets</h2>
+        <div class="items">
+          <article class="wish" data-link="https://www.lego.com/en-us/product/hogwarts-castle-and-grounds-76419?consent-modal=show" data-stars="3" data-category="lego">
+            <div class="wish-main">
+              <h3>Mini Hogwarts Castle</h3>
+              <p class="meta">$169.99</p>
+            </div>
+            <div class="wish-actions"><div class="stars">★★★</div></div>
+          </article>
+
+          <article class="wish" data-link="https://www.lego.com/en-us/product/the-avengers-helicarrier-76295?age-gate=grown_up" data-stars="2" data-category="lego">
+            <div class="wish-main">
+              <h3>Avengers Helicarrier</h3>
+              <p class="meta">$79.99</p>
+            </div>
+            <div class="wish-actions"><div class="stars">★★</div></div>
+          </article>
         </div>
       </div>
-    </div>
-  </div>
+
+      <!-- Posters / Random -->
+      <div class="group">
+        <h2>🎨 Posters & Books</h2>
+        <div class="items">
+          <article class="wish" data-link="https://displate.com/displate/6610117" data-stars="2" data-category="posters">
+            <div class="wish-main">
+              <h3>'Portal Elements' Metal Poster</h3>
+              <p class="meta">Displate metal poster</p>
+            </div>
+            <div class="wish-actions"><div class="stars">★★</div></div>
+          </article>
+
+          <article class="wish" data-link="#" data-stars="2" data-category="books">
+            <div class="wish-main">
+              <h3>Short Sci-Fi & Adventure Books</h3>
+              <p class="meta">Pick any — short & punchy</p>
+            </div>
+            <div class="wish-actions"><div class="stars">★★</div></div>
+          </article>
+        </div>
+      </div>
+
+      <!-- Tech -->
+      <div class="group">
+        <h2>🔊 Technology</h2>
+        <div class="items">
+          <article class="wish" data-link="https://us.nothing.tech/products/cmf-buds-2-plus?srsltid=AfmBOoo3zCECuQmyPjwg1msZY_oeNfAwoCj8NJ9-MKdP1O9IZBCskfG9&Colour=Light+Grey" data-stars="4" data-category="tech">
+            <div class="wish-main">
+              <h3>CMF BUDS (Blue) Earbuds</h3>
+              <p class="meta">Official Nothing shop</p>
+            </div>
+            <div class="wish-actions"><div class="stars">★★★★</div></div>
+          </article>
+
+          <article class="wish" data-link="https://electronics.sony.com/audio/headphones/headband/p/whch520-b?srsltid=AfmBOopdwNW0VfphsxU-9T-Sda7qf9JHCEEBdivWolyRTwg1sbDuhqUD" data-stars="1" data-category="tech">
+            <div class="wish-main">
+              <h3>Sony WH-CH520 (budget)</h3>
+              <p class="meta">Cheap-ish headphones</p>
+            </div>
+            <div class="wish-actions"><div class="stars">★</div></div>
+          </article>
+
+          <article class="wish" data-link="https://electronics.sony.com/audio/headphones/headband/p/wh1000xm4-l" data-stars="3" data-category="tech">
+            <div class="wish-main">
+              <h3>Sony WH-1000XM4 (premium)</h3>
+              <p class="meta">Often on sale</p>
+            </div>
+            <div class="wish-actions"><div class="stars">★★★</div></div>
+          </article>
+        </div>
+      </div>
+
+      <!-- Funko Pops -->
+      <div class="group">
+        <h2>🧍 Funko Pops</h2>
+        <div class="items">
+          <article class="wish" data-link="https://funko.com/pop-the-mandalorian-with-grogu/54525.html" data-stars="2" data-category="funko">
+            <div class="wish-main"><h3>Baby Yoda (Grogu)</h3></div><div class="wish-actions"><div class="stars">★★</div></div>
+          </article>
+
+          <article class="wish" data-link="https://funko.com/pop-wednesday-addams-with-umbrella/81741.html" data-stars="3" data-category="funko">
+            <div class="wish-main"><h3>Wednesday Addams (with Umbrella)</h3></div><div class="wish-actions"><div class="stars">★★★</div></div>
+          </article>
+
+          <article class="wish" data-link="https://funko.com/pop-dustin-henderson/75751.html" data-stars="3" data-category="funko">
+            <div class="wish-main"><h3>Dustin Henderson</h3></div><div class="wish-actions"><div class="stars">★★★</div></div>
+          </article>
+
+          <article class="wish" data-link="https://funko.com/pop-pennywise-the-dancing-clown/86675.html" data-stars="2" data-category="funko">
+            <div class="wish-main"><h3>Pennywise</h3></div><div class="wish-actions"><div class="stars">★★</div></div>
+          </article>
+
+          <article class="wish" data-link="https://funko.com/pop-ghost-face/80696.html" data-stars="2" data-category="funko">
+            <div class="wish-main"><h3>Ghostface</h3></div><div class="wish-actions"><div class="stars">★★</div></div>
+          </article>
+
+          <article class="wish" data-link="https://funko.com/pop-deadpool-with-swords/79766.html" data-stars="2" data-category="funko">
+            <div class="wish-main"><h3>Deadpool (with swords)</h3></div><div class="wish-actions"><div class="stars">★★</div></div>
+          </article>
+
+          <article class="wish" data-link="https://funko.com/pop-peter-parker%2Firon-spider-the-infinity-saga/87223.html" data-stars="2" data-category="funko">
+            <div class="wish-main"><h3>Spiderman (Iron Spider)</h3></div><div class="wish-actions"><div class="stars">★★</div></div>
+          </article>
+
+          <article class="wish" data-link="#" data-stars="2" data-category="funko">
+            <div class="wish-main"><h3>Chell - Portal</h3></div><div class="wish-actions"><div class="stars">★★</div></div>
+          </article>
+
+          <article class="wish" data-link="#" data-stars="2" data-category="funko">
+            <div class="wish-main"><h3>Stan Lee</h3></div><div class="wish-actions"><div class="stars">★★</div></div>
+          </article>
+
+          <article class="wish" data-link="#" data-stars="3" data-category="funko">
+            <div class="wish-main"><h3>Nick Fury</h3></div><div class="wish-actions"><div class="stars">★★★</div></div>
+          </article>
+
+          <article class="wish" data-link="#" data-stars="2" data-category="funko">
+            <div class="wish-main"><h3>Tony Stark</h3></div><div class="wish-actions"><div class="stars">★★</div></div>
+          </article>
+
+          <article class="wish" data-link="#" data-stars="2" data-category="funko">
+            <div class="wish-main"><h3>Wednesday (Umbrella)</h3></div><div class="wish-actions"><div class="stars">★</div></div>
+          </article>
+        </div>
+      </div>
+
+      <!-- Watches -->
+      <div class="group">
+        <h2>⌚ Watches</h2>
+        <div class="items">
+          <article class="wish" data-link="#" data-stars="3" data-category="watch">
+            <div class="wish-main"><h3>Detroit: Become Human Watch (rare)</h3><p class="meta">Rare / exclusive</p></div><div class="wish-actions"><div class="stars">★★★</div></div>
+          </article>
+
+          <article class="wish" data-link="https://www.fossil.com/en-us/products/minimalist-slim-three-hand-black-stainless-steel-watch/FS5308.html" data-stars="2" data-category="watch">
+            <div class="wish-main"><h3>Fossil Minimalist Three-Hand Black</h3></div><div class="wish-actions"><div class="stars">★★</div></div>
+          </article>
+        </div>
+      </div>
+
+      <!-- VIP & Expensive (collapsed by default) -->
+      <div class="group vip" id="vipGroup" hidden>
+        <h2>🏆 V.I.P. List</h2>
+        <div class="items">
+          <article class="wish" data-link="https://us.nothing.tech/products/cmf-buds-2-plus?srsltid=AfmBOoo3zCECuQmyPjwg1msZY_oeNfAwoCj8NJ9-MKdP1O9IZBCskfG9&Colour=Light+Grey" data-stars="4" data-category="vip">
+            <div class="wish-main"><h3>CMF BUDS (Blue) Earbuds</h3></div><div class="wish-actions"><div class="stars">★★★★</div></div>
+          </article>
+
+          <article class="wish" data-link="https://www.lego.com/en-us/product/hogwarts-castle-and-grounds-76419?consent-modal=show" data-stars="3" data-category="vip">
+            <div class="wish-main"><h3>Mini Hogwarts Castle</h3></div><div class="wish-actions"><div class="stars">★★★</div></div>
+          </article>
+
+          <article class="wish" data-link="https://displate.com/displate/6610117" data-stars="2" data-category="vip">
+            <div class="wish-main"><h3>'Portal Elements' Metal Poster</h3></div><div class="wish-actions"><div class="stars">★★</div></div>
+          </article>
+        </div>
+      </div>
+
+      <footer class="footer-note">
+        <p>Made with minimalism + neon vibes. Links open in a new tab. Items with <strong>—</strong> have no public link attached yet.</p>
+      </footer>
+    </section>
+  </main>
 
   <script src="script.js"></script>
 </body>
