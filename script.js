@@ -8,6 +8,14 @@
 (() => {
   const wishlist = document.getElementById('wishlist');
   const items = Array.from(document.querySelectorAll('.wish'));
+  items.forEach(el => {
+  if (!el.querySelector('.mark-purchased')) {
+    const btn = document.createElement('button');
+    btn.className = 'mark-purchased';
+    btn.textContent = '✓';
+    el.querySelector('.wish-actions').appendChild(btn);
+  }
+});
   const searchInput = document.getElementById('search');
   const filterStars = document.getElementById('filterStars');
   const toggleVIP = document.getElementById('toggleVIP');
@@ -54,23 +62,26 @@
     return `${cat}::${title}`;
   }
 
-  // Item click behavior
-  items.forEach(el => {
-    el.addEventListener('click', (ev) => {
-      // If user clicked a control inside (future-proof), ignore
-      if (ev.target.closest('button')) return;
-
-      const link = el.dataset.link;
-      if (link && link !== '#') {
-        window.open(link, '_blank', 'noopener');
-      } else {
-        // toggle purchased state if no link (or if user clicked while holding ctrl)
-        const id = getItemId(el);
-        purchasedMap[id] = !purchasedMap[id];
-        savePurchased(purchasedMap);
-        refreshPurchasedMarks();
-      }
+items.forEach(el => {
+  const markBtn = el.querySelector('.mark-purchased');
+  if (markBtn) {
+    markBtn.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      const id = getItemId(el);
+      purchasedMap[id] = !purchasedMap[id];
+      savePurchased(purchasedMap);
+      refreshPurchasedMarks();
     });
+  }
+
+  el.addEventListener('click', (ev) => {
+    if (ev.target.closest('.mark-purchased')) return;
+    const link = el.dataset.link;
+    if (link && link !== '#') {
+      window.open(link, '_blank', 'noopener');
+    }
+  });
+});
 
     // double-click toggles purchased (convenience)
     el.addEventListener('dblclick', (ev) => {
