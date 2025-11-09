@@ -389,3 +389,69 @@ h1 span {
 .home-btn:active {
   transform: scale(0.96);
 }
+
+/* =========================
+   SPACING & LAYOUT IMPROVEMENTS
+   ========================= */
+
+/* General breathing room */
+body {
+  padding: 2rem 1rem;
+}
+
+/* Header spacing */
+.site-header {
+  margin: 48px auto 24px;
+  padding: 28px;
+}
+
+.header-inner {
+  gap: 28px;
+}
+
+/* Subtitle breathing space */
+.subtitle {
+  margin-top: 16px;
+  margin-bottom: 0;
+  line-height: 1.5;
+}
+
+/* Container padding & vertical rhythm */
+.container {
+  padding: 0 24px 100px;
+  margin-top: 32px;
+}
+
+/* Section controls */
+.list-controls {
+  margin-bottom: 28px;
+  gap: 20px;
+}
+
+/* Grid gap */
+.wishlist-grid {
+  gap: 36px;
+}
+
+/* Group blocks */
+.group {
+  padding: 24px;
+  margin-bottom: 36px;
+}
+
+/* Items inside each group */
+.items {
+  gap: 20px;
+}
+
+/* Individual wishlist items */
+.wish {
+  padding: 18px 20px;
+  gap: 20px;
+}
+
+/* Footer breathing room */
+.footer-note {
+  margin-top: 60px;
+  padding: 24px;
+}
